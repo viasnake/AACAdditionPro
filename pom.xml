@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <!-- Add your server directory here for automatic deployment. -->
-        <testserver.dir>${user.home}\Desktop\Testserver\plugins</testserver.dir>
+        <testserver.dir>${user.home}/Programmieren/Testserver/plugins</testserver.dir>
     </properties>
 
     <build>
