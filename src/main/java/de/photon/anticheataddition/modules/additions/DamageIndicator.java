@@ -63,19 +63,15 @@ public final class DamageIndicator extends Module {
         if (!shouldSpoof(entityType)) return;
 
         final int healthIndex = ServerVersion.ACTIVE.getMetadataPositionIndex().healthIndex();
-        final List<EntityData<?>> metadata = new ArrayList<>(wrapper.getEntityMetadata());
 
-        for (int i = 0; i < metadata.size(); ++i) {
-            final EntityData<?> data = metadata.get(i);
+        // Use raw EntityData here to ensure we can use setValue().
+        for (EntityData data : wrapper.getEntityMetadata()) {
+            if (data.getIndex() != healthIndex || data.getType() != EntityDataTypes.FLOAT) continue;
 
-            if (data.getIndex() != healthIndex) continue;
-
-            final float health = (float) data.getValue();
+            final float health = (Float) data.getValue();
             if (health <= 0.0F) return;
 
-            metadata.set(i, new EntityData<>(healthIndex, EntityDataTypes.FLOAT, SPOOFED_HEALTH));
-            wrapper.setEntityMetadata(metadata);
-            return;
+            data.setValue(SPOOFED_HEALTH);
         }
     }
 
@@ -93,6 +89,7 @@ public final class DamageIndicator extends Module {
         for (WrapperPlayServerUpdateAttributes.Property property : wrapper.getProperties()) {
             if (property.getAttribute() == Attributes.MAX_HEALTH) {
                 property.setValue(SPOOFED_MAX_HEALTH);
+                property.setModifiers(new ArrayList<>());
                 return;
             }
         }
